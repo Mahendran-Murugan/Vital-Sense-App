@@ -2,6 +2,8 @@ import 'package:dash_chat_2/dash_chat_2.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+const List<String> list = <String>['Prescription', 'ChatBot'];
+
 class ChatScreen extends StatefulWidget {
   const ChatScreen({super.key});
 
@@ -16,6 +18,8 @@ class _ChatScreenState extends State<ChatScreen> {
   final List<ChatMessage> _messsages = [];
   final List<ChatUser> _typingUser = [];
 
+  String dropDownValue = list.first;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -29,18 +33,59 @@ class _ChatScreenState extends State<ChatScreen> {
             )),
         centerTitle: true,
       ),
-      body: DashChat(
-        currentUser: _user,
-        onSend: (ChatMessage m) => {
-          getResponse(m),
-        },
-        typingUsers: _typingUser,
-        messageOptions: MessageOptions(
-          currentUserContainerColor: Colors.red.shade400,
-          containerColor: Colors.grey.shade400,
-          textColor: Colors.white,
+      body: Container(
+        padding: const EdgeInsets.all(5),
+        color: Colors.grey.shade100,
+        child: Column(
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 2),
+                  child: Text(
+                    'Chat Bot:',
+                    style: GoogleFonts.amaranth(
+                      fontSize: 22,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 2),
+                  child: DropdownMenu<String>(
+                    initialSelection: list.first,
+                    onSelected: (String? value) {
+                      setState(() {
+                        dropDownValue = value!;
+                      });
+                    },
+                    dropdownMenuEntries:
+                        list.map<DropdownMenuEntry<String>>((String value) {
+                      return DropdownMenuEntry<String>(
+                          value: value, label: value);
+                    }).toList(),
+                  ),
+                ),
+              ],
+            ),
+            Expanded(
+              child: DashChat(
+                currentUser: _user,
+                onSend: (ChatMessage m) => {
+                  getResponse(m),
+                },
+                typingUsers: _typingUser,
+                messageOptions: MessageOptions(
+                  currentUserContainerColor: Colors.red.shade400,
+                  containerColor: Colors.grey.shade600,
+                  textColor: Colors.white,
+                ),
+                messages: _messsages,
+              ),
+            ),
+          ],
         ),
-        messages: _messsages,
       ),
     );
   }
