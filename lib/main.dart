@@ -1,7 +1,18 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:vitalsense/firebase_options.dart';
 import 'package:vitalsense/pages/chat_screen.dart';
+import 'package:vitalsense/pages/home_screen.dart';
+import 'package:vitalsense/pages/login_screen.dart';
+import 'package:vitalsense/pages/register_screen.dart';
+import 'package:vitalsense/pages/verify_email_screen.dart';
+import 'package:vitalsense/routes/constants.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   runApp(const MyApp());
 }
 
@@ -17,7 +28,14 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: const ChatScreen(),
+      initialRoute: homeRoute,
+      routes: {
+        homeRoute: (context) => const HomeScreen(),
+        loginRoute: (context) => const LoginScreen(),
+        chatRoute: (context) => const ChatScreen(),
+        verifyEmailRoute: (context) => const VerifyEmailScreen(),
+        registerRoute: (context) => const RegisterScreen(),
+      },
     );
   }
 }
