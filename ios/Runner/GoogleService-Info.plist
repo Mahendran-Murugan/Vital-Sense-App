@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>1094805189665-j999leb4ho360vdpcbs5i7qb8ctm93ff.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.1094805189665-j999leb4ho360vdpcbs5i7qb8ctm93ff</string>
+	<key>API_KEY</key>
+	<string>AIzaSyAAF0NpIH1v_SaOxLiYFIwOQevROg-pLTY</string>
+	<key>GCM_SENDER_ID</key>
+	<string>1094805189665</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.mahendran.murugan.vitalsense</string>
+	<key>PROJECT_ID</key>
+	<string>vitalsenseapp</string>
+	<key>STORAGE_BUCKET</key>
+	<string>vitalsenseapp.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:1094805189665:ios:a5bd4a0961a07c96101f60</string>
+	<key>DATABASE_URL</key>
+	<string>https://vitalsenseapp-default-rtdb.firebaseio.com</string>
+</dict>
+</plist>

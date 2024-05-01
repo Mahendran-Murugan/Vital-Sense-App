@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "1094805189665",
+    "firebase_url": "https://vitalsenseapp-default-rtdb.firebaseio.com",
+    "project_id": "vitalsenseapp",
+    "storage_bucket": "vitalsenseapp.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1094805189665:android:b4e4e48987d2dfea101f60",
+        "android_client_info": {
+          "package_name": "com.mahendran.murugan.vitalsense"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1094805189665-4bvu79acnhrfq2lkc9peb13pm3o9v9qn.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAWC9PFnRNxaSy_5EERKRzbaOx6lXGb2HA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1094805189665-4bvu79acnhrfq2lkc9peb13pm3o9v9qn.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
