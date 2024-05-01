@@ -1,9 +1,11 @@
 import 'dart:developer';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:vitalsense/routes/constants.dart';
 import 'package:vitalsense/utils/show_error_dialog.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -16,10 +18,33 @@ class _LoginScreenState extends State<LoginScreen> {
   late final TextEditingController _email;
   late final TextEditingController _password;
 
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+
+  String s = "";
+
+  final DatabaseReference _dbRef =
+      FirebaseDatabase.instance.ref().child("users");
+
+  void selectiveRendering(User? user) async {
+    if (user == null) return;
+    final ref = await _dbRef.child(user.uid).child("status").get();
+    final pre = await SharedPreferences.getInstance();
+    if (ref.exists) {
+      await pre.setString("status", ref.value as String);
+    }
+  }
+
+  readPref() async {
+    final pre = await SharedPreferences.getInstance();
+    s = await pre.getString("status") ?? " ";
+  }
+
   @override
   void initState() {
     _email = TextEditingController();
     _password = TextEditingController();
+    selectiveRendering(_auth.currentUser);
+    readPref();
     super.initState();
   }
 
@@ -80,10 +105,22 @@ class _LoginScreenState extends State<LoginScreen> {
                   } else {
                     final user = FirebaseAuth.instance.currentUser;
                     if (user?.emailVerified ?? false) {
-                      Navigator.of(context).pushNamedAndRemoveUntil(
-                        chatRoute,
-                        (route) => false,
-                      );
+                      if (s == "Patient") {
+                        Navigator.of(context).pushNamedAndRemoveUntil(
+                          patientRoute,
+                          (route) => false,
+                        );
+                      } else if (s == "Doctor") {
+                        Navigator.of(context).pushNamedAndRemoveUntil(
+                          doctorRoute,
+                          (route) => false,
+                        );
+                      } else {
+                        Navigator.of(context).pushNamedAndRemoveUntil(
+                          chatRoute,
+                          (route) => false,
+                        );
+                      }
                     } else {
                       Navigator.of(context).pushNamedAndRemoveUntil(
                         verifyEmailRoute,

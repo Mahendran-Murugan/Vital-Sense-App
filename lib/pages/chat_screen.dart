@@ -96,7 +96,7 @@ class _ChatScreenState extends State<ChatScreen> {
   }
 
   Future<Chat> post(ChatMessage m) async {
-    final uri;
+    final Uri uri;
     if (dropDownValue == "ChatBot") {
       uri = Uri.parse("$url/api/post/medicine");
     } else {

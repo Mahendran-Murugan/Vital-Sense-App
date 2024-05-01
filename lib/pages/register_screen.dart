@@ -1,9 +1,12 @@
 import 'dart:developer';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:vitalsense/routes/constants.dart';
 import 'package:vitalsense/utils/show_error_dialog.dart';
+
+const List<String> list = <String>['Patient', 'Doctor'];
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
@@ -15,6 +18,23 @@ class RegisterScreen extends StatefulWidget {
 class _RegisterScreenState extends State<RegisterScreen> {
   late final TextEditingController _email;
   late final TextEditingController _password;
+
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+
+  String dropDownValue = list.first;
+
+  final DatabaseReference _dbRef =
+      FirebaseDatabase.instance.ref().child('users');
+
+  void setData(String email, String status, User? user) {
+    if (user == null) return;
+    DatabaseReference curr = _dbRef.child(user.uid);
+    curr.set({
+      "id": user.uid,
+      "email": email,
+      "status": status,
+    });
+  }
 
   @override
   void initState() {
@@ -48,6 +68,37 @@ class _RegisterScreenState extends State<RegisterScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 2),
+                  child: Text(
+                    'Status :',
+                    style: GoogleFonts.amaranth(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 2),
+                  child: DropdownMenu<String>(
+                    initialSelection: list.first,
+                    onSelected: (String? value) {
+                      setState(() {
+                        dropDownValue = value!;
+                      });
+                    },
+                    dropdownMenuEntries:
+                        list.map<DropdownMenuEntry<String>>((String value) {
+                      return DropdownMenuEntry<String>(
+                          value: value, label: value);
+                    }).toList(),
+                  ),
+                ),
+              ],
+            ),
             TextField(
               controller: _email,
               enableSuggestions: false,
@@ -71,11 +122,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 final email = _email.text;
                 final pass = _password.text;
                 try {
-                  await FirebaseAuth.instance.createUserWithEmailAndPassword(
+                  await _auth.createUserWithEmailAndPassword(
                     email: email,
                     password: pass,
                   );
-                  final user = FirebaseAuth.instance.currentUser;
+                  final user = _auth.currentUser;
+                  setData(email, dropDownValue, user);
                   user?.sendEmailVerification();
                   if (!context.mounted) {
                     log("Context Error");
