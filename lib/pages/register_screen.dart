@@ -43,93 +43,97 @@ class _RegisterScreenState extends State<RegisterScreen> {
             )),
         centerTitle: true,
       ),
-      body: Column(
-        children: [
-          TextField(
-            controller: _email,
-            enableSuggestions: false,
-            keyboardType: TextInputType.emailAddress,
-            autocorrect: false,
-            decoration: const InputDecoration(
-              hintText: 'Enter your email',
+      body: Container(
+        padding: const EdgeInsets.all(15),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            TextField(
+              controller: _email,
+              enableSuggestions: false,
+              keyboardType: TextInputType.emailAddress,
+              autocorrect: false,
+              decoration: const InputDecoration(
+                hintText: 'Enter your email',
+              ),
             ),
-          ),
-          TextField(
-            controller: _password,
-            obscureText: true,
-            enableSuggestions: false,
-            autocorrect: false,
-            decoration: const InputDecoration(
-              hintText: "Enter your password",
+            TextField(
+              controller: _password,
+              obscureText: true,
+              enableSuggestions: false,
+              autocorrect: false,
+              decoration: const InputDecoration(
+                hintText: "Enter your password",
+              ),
             ),
-          ),
-          TextButton(
-            onPressed: () async {
-              final email = _email.text;
-              final pass = _password.text;
-              try {
-                await FirebaseAuth.instance.createUserWithEmailAndPassword(
-                  email: email,
-                  password: pass,
-                );
-                final user = FirebaseAuth.instance.currentUser;
-                user?.sendEmailVerification();
-                if (!context.mounted) {
-                  log("Context Error");
-                } else {
-                  Navigator.of(context).pushNamed(
-                    verifyEmailRoute,
+            TextButton(
+              onPressed: () async {
+                final email = _email.text;
+                final pass = _password.text;
+                try {
+                  await FirebaseAuth.instance.createUserWithEmailAndPassword(
+                    email: email,
+                    password: pass,
                   );
-                }
-              } on FirebaseAuthException catch (e) {
-                if (!context.mounted) {
-                  log("Context Error");
-                } else {
-                  if (e.code == 'weak-password') {
-                    await showErrorDialog(
-                      context,
-                      'Weak Password',
+                  final user = FirebaseAuth.instance.currentUser;
+                  user?.sendEmailVerification();
+                  if (!context.mounted) {
+                    log("Context Error");
+                  } else {
+                    Navigator.of(context).pushNamed(
+                      verifyEmailRoute,
                     );
-                  } else if (e.code == 'email-already-in-use') {
-                    await showErrorDialog(
-                      context,
-                      'Email Already in Use',
-                    );
-                  } else if (e.code == 'invalid-email') {
-                    await showErrorDialog(
-                      context,
-                      'Invalid Email',
-                    );
+                  }
+                } on FirebaseAuthException catch (e) {
+                  if (!context.mounted) {
+                    log("Context Error");
+                  } else {
+                    if (e.code == 'weak-password') {
+                      await showErrorDialog(
+                        context,
+                        'Weak Password',
+                      );
+                    } else if (e.code == 'email-already-in-use') {
+                      await showErrorDialog(
+                        context,
+                        'Email Already in Use',
+                      );
+                    } else if (e.code == 'invalid-email') {
+                      await showErrorDialog(
+                        context,
+                        'Invalid Email',
+                      );
+                    } else {
+                      await showErrorDialog(
+                        context,
+                        'Error:${e.code}',
+                      );
+                    }
+                  }
+                } catch (e) {
+                  if (!context.mounted) {
+                    log("Context Error");
                   } else {
                     await showErrorDialog(
                       context,
-                      'Error:${e.code}',
+                      'Error:${e.toString()}',
                     );
                   }
                 }
-              } catch (e) {
-                if (!context.mounted) {
-                  log("Context Error");
-                } else {
-                  await showErrorDialog(
-                    context,
-                    'Error:${e.toString()}',
-                  );
-                }
-              }
-            },
-            child: const Text("Register"),
-          ),
-          TextButton(
-            onPressed: () {
-              Navigator.of(context).pushNamedAndRemoveUntil(
-                loginRoute,
-                (route) => false,
-              );
-            },
-            child: const Text("Already Registered? Login Here!"),
-          ),
-        ],
+              },
+              child: const Text("Register"),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pushNamedAndRemoveUntil(
+                  loginRoute,
+                  (route) => false,
+                );
+              },
+              child: const Text("Already Registered? Login Here!"),
+            ),
+          ],
+        ),
       ),
     );
   }

@@ -43,90 +43,94 @@ class _LoginScreenState extends State<LoginScreen> {
             )),
         centerTitle: true,
       ),
-      body: Column(
-        children: [
-          TextField(
-            controller: _email,
-            enableSuggestions: false,
-            keyboardType: TextInputType.emailAddress,
-            autocorrect: false,
-            decoration: const InputDecoration(
-              hintText: 'Enter your email',
+      body: Container(
+        padding: const EdgeInsets.all(15),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            TextField(
+              controller: _email,
+              enableSuggestions: false,
+              keyboardType: TextInputType.emailAddress,
+              autocorrect: false,
+              decoration: const InputDecoration(
+                hintText: 'Enter your email',
+              ),
             ),
-          ),
-          TextField(
-            controller: _password,
-            obscureText: true,
-            enableSuggestions: false,
-            autocorrect: false,
-            decoration: const InputDecoration(
-              hintText: "Enter your password",
+            TextField(
+              controller: _password,
+              obscureText: true,
+              enableSuggestions: false,
+              autocorrect: false,
+              decoration: const InputDecoration(
+                hintText: "Enter your password",
+              ),
             ),
-          ),
-          TextButton(
-            onPressed: () async {
-              final email = _email.text;
-              final pass = _password.text;
-              try {
-                await FirebaseAuth.instance.signInWithEmailAndPassword(
-                  email: email,
-                  password: pass,
-                );
-                if (!context.mounted) {
-                  log("Context Error");
-                } else {
-                  final user = FirebaseAuth.instance.currentUser;
-                  if (user?.emailVerified ?? false) {
-                    Navigator.of(context).pushNamedAndRemoveUntil(
-                      chatRoute,
-                      (route) => false,
-                    );
-                  } else {
-                    Navigator.of(context).pushNamedAndRemoveUntil(
-                      verifyEmailRoute,
-                      (route) => false,
-                    );
-                  }
-                }
-              } on FirebaseAuthException catch (e) {
-                if (!context.mounted) {
-                  log("Context Error");
-                } else {
-                  if (e.code == 'invalid-credential') {
-                    await showErrorDialog(
-                      context,
-                      "Invalid Credentials",
-                    );
-                  } else {
-                    await showErrorDialog(
-                      context,
-                      "Error: ${e.code}",
-                    );
-                  }
-                }
-              } catch (e) {
-                if (!context.mounted) {
-                  log("Context Error");
-                } else {
-                  await showErrorDialog(
-                    context,
-                    "Error: ${e.toString()}",
+            TextButton(
+              onPressed: () async {
+                final email = _email.text;
+                final pass = _password.text;
+                try {
+                  await FirebaseAuth.instance.signInWithEmailAndPassword(
+                    email: email,
+                    password: pass,
                   );
+                  if (!context.mounted) {
+                    log("Context Error");
+                  } else {
+                    final user = FirebaseAuth.instance.currentUser;
+                    if (user?.emailVerified ?? false) {
+                      Navigator.of(context).pushNamedAndRemoveUntil(
+                        chatRoute,
+                        (route) => false,
+                      );
+                    } else {
+                      Navigator.of(context).pushNamedAndRemoveUntil(
+                        verifyEmailRoute,
+                        (route) => false,
+                      );
+                    }
+                  }
+                } on FirebaseAuthException catch (e) {
+                  if (!context.mounted) {
+                    log("Context Error");
+                  } else {
+                    if (e.code == 'invalid-credential') {
+                      await showErrorDialog(
+                        context,
+                        "Invalid Credentials",
+                      );
+                    } else {
+                      await showErrorDialog(
+                        context,
+                        "Error: ${e.code}",
+                      );
+                    }
+                  }
+                } catch (e) {
+                  if (!context.mounted) {
+                    log("Context Error");
+                  } else {
+                    await showErrorDialog(
+                      context,
+                      "Error: ${e.toString()}",
+                    );
+                  }
                 }
-              }
-            },
-            child: const Text("Login"),
-          ),
-          TextButton(
-            onPressed: () {
-              Navigator.of(context).pushNamedAndRemoveUntil(
-                registerRoute,
-                (route) => false,
-              );
-            },
-            child: const Text("Not Registered? Reister here!"),
-          ),
-        ],
+              },
+              child: const Text("Login"),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pushNamedAndRemoveUntil(
+                  registerRoute,
+                  (route) => false,
+                );
+              },
+              child: const Text("Not Registered? Reister here!"),
+            ),
+          ],
+        ),
       ),
     );
   }

@@ -25,8 +25,10 @@ class _VerifyEmailScreenViewState extends State<VerifyEmailScreen> {
             )),
         centerTitle: true,
       ),
-      body: Center(
+      body: Container(
+        padding: const EdgeInsets.all(15),
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             const Text(
                 'We\'ve send you an email verification. Please verify your email'),
@@ -46,7 +48,7 @@ class _VerifyEmailScreenViewState extends State<VerifyEmailScreen> {
                   log("Context Error");
                 } else {
                   Navigator.of(context)
-                      .pushNamedAndRemoveUntil(registerRoute, (route) => false);
+                      .pushNamedAndRemoveUntil(loginRoute, (route) => false);
                 }
               },
               child: const Text("Restart"),
