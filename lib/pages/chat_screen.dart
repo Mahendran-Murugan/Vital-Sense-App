@@ -47,7 +47,13 @@ class _ChatScreenState extends State<ChatScreen> {
 
   Future<void> getResponse(ChatMessage m) async {
     setState(() {
-      _messsages.insert(0, m);
+      _messsages.insert(
+          0,
+          ChatMessage(
+            user: m.user,
+            createdAt: m.createdAt,
+            text: m.text.trimRight(),
+          ));
       _typingUser.add(_server);
     });
     const response = "Hello, I'm a ChatBot";
