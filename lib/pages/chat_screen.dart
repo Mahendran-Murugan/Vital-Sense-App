@@ -1,6 +1,10 @@
+import 'dart:convert';
+
 import 'package:dash_chat_2/dash_chat_2.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:http/http.dart' as http;
+import 'package:vitalsense/model/chat_response.dart';
 
 const List<String> list = <String>['Prescription', 'ChatBot'];
 
@@ -19,6 +23,7 @@ class _ChatScreenState extends State<ChatScreen> {
   final List<ChatUser> _typingUser = [];
 
   String dropDownValue = list.first;
+  String url = "";
 
   @override
   Widget build(BuildContext context) {
@@ -35,7 +40,7 @@ class _ChatScreenState extends State<ChatScreen> {
       ),
       body: Container(
         padding: const EdgeInsets.all(5),
-        color: Colors.grey.shade100,
+        color: Colors.grey.shade300.withOpacity(0.5),
         child: Column(
           children: [
             Row(
@@ -46,7 +51,7 @@ class _ChatScreenState extends State<ChatScreen> {
                   child: Text(
                     'Chat Bot:',
                     style: GoogleFonts.amaranth(
-                      fontSize: 22,
+                      fontSize: 20,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
@@ -90,6 +95,24 @@ class _ChatScreenState extends State<ChatScreen> {
     );
   }
 
+  Future<Chat> post(ChatMessage m) async {
+    final uri;
+    if (dropDownValue == "ChatBot") {
+      uri = Uri.parse("$url/api/post/medicine");
+    } else {
+      uri = Uri.parse("$url/api/post/chatbot");
+    }
+    Map<String, dynamic> request = {
+      'message': m.text.trimRight(),
+    };
+    try {
+      final response = await http.post(uri, body: request);
+      return Chat.fromJson(json.decode(response.body));
+    } catch (e) {
+      return Chat(message: "Error");
+    }
+  }
+
   Future<void> getResponse(ChatMessage m) async {
     setState(() {
       _messsages.insert(
@@ -101,14 +124,14 @@ class _ChatScreenState extends State<ChatScreen> {
           ));
       _typingUser.add(_server);
     });
-    const response = "Hello, I'm a ChatBot";
+    Chat serverResponse = await post(m);
     setState(() {
       _messsages.insert(
         0,
         ChatMessage(
           user: _server,
           createdAt: DateTime.now(),
-          text: response,
+          text: serverResponse.message,
         ),
       );
     });
