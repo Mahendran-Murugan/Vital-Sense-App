@@ -7,6 +7,8 @@ import 'package:vitalsense/routes/constants.dart';
 import 'package:vitalsense/utils/show_error_dialog.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+const List<String> list = <String>['Patient', 'Doctor'];
+
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
 
@@ -22,6 +24,8 @@ class _LoginScreenState extends State<LoginScreen> {
 
   String s = "";
 
+  String dropDownValue = list.first;
+
   final DatabaseReference _dbRef =
       FirebaseDatabase.instance.ref().child("users");
 
@@ -36,15 +40,14 @@ class _LoginScreenState extends State<LoginScreen> {
 
   readPref() async {
     final pre = await SharedPreferences.getInstance();
-    s = await pre.getString("status") ?? " ";
+    s = pre.getString("status") ?? " ";
+    print(s);
   }
 
   @override
   void initState() {
     _email = TextEditingController();
     _password = TextEditingController();
-    selectiveRendering(_auth.currentUser);
-    readPref();
     super.initState();
   }
 
@@ -73,6 +76,37 @@ class _LoginScreenState extends State<LoginScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 2),
+                  child: Text(
+                    'Status :',
+                    style: GoogleFonts.amaranth(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 2),
+                  child: DropdownMenu<String>(
+                    initialSelection: list.first,
+                    onSelected: (String? value) {
+                      setState(() {
+                        dropDownValue = value!;
+                      });
+                    },
+                    dropdownMenuEntries:
+                        list.map<DropdownMenuEntry<String>>((String value) {
+                      return DropdownMenuEntry<String>(
+                          value: value, label: value);
+                    }).toList(),
+                  ),
+                ),
+              ],
+            ),
             TextField(
               controller: _email,
               enableSuggestions: false,
@@ -104,13 +138,15 @@ class _LoginScreenState extends State<LoginScreen> {
                     log("Context Error");
                   } else {
                     final user = FirebaseAuth.instance.currentUser;
+                    selectiveRendering(user);
+                    await readPref();
                     if (user?.emailVerified ?? false) {
-                      if (s == "Patient") {
+                      if (dropDownValue == "Patient") {
                         Navigator.of(context).pushNamedAndRemoveUntil(
                           patientRoute,
                           (route) => false,
                         );
-                      } else if (s == "Doctor") {
+                      } else if (dropDownValue == "Doctor") {
                         Navigator.of(context).pushNamedAndRemoveUntil(
                           doctorRoute,
                           (route) => false,

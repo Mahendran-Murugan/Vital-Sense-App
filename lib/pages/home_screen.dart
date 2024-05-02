@@ -1,8 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
-import 'package:vitalsense/firebase_options.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:vitalsense/pages/chat_screen.dart';
 import 'package:vitalsense/pages/doctor_screen.dart';
 import 'package:vitalsense/pages/login_screen.dart';
@@ -34,11 +33,15 @@ class _HomeScreenState extends State<HomeScreen> {
     return "";
   }
 
+  Future<void> readPref() async {
+    final pre = await SharedPreferences.getInstance();
+    status = pre.getString("status") ?? " ";
+    print(status);
+  }
+
   @override
   void initState() {
     super.initState();
-    selectiveRendering(_auth.currentUser);
-    setStatus();
   }
 
   void setStatus() {
@@ -50,9 +53,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      future: Firebase.initializeApp(
-        options: DefaultFirebaseOptions.currentPlatform,
-      ),
+      future: readPref(),
       builder: (context, snapshot) {
         User? user = _auth.currentUser;
         switch (snapshot.connectionState) {

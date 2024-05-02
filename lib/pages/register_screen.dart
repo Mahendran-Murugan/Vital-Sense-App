@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:vitalsense/routes/constants.dart';
 import 'package:vitalsense/utils/show_error_dialog.dart';
 
@@ -19,14 +20,21 @@ class _RegisterScreenState extends State<RegisterScreen> {
   late final TextEditingController _email;
   late final TextEditingController _password;
 
+  String s = "";
+
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
   String dropDownValue = list.first;
 
+  readPref() async {
+    final pre = await SharedPreferences.getInstance();
+    s = pre.getString("status") ?? " ";
+  }
+
   final DatabaseReference _dbRef =
       FirebaseDatabase.instance.ref().child('users');
 
-  void setData(String email, String status, User? user) {
+  void setData(String email, String status, User? user) async {
     if (user == null) return;
     DatabaseReference curr = _dbRef.child(user.uid);
     curr.set({
@@ -128,7 +136,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   );
                   final user = _auth.currentUser;
                   setData(email, dropDownValue, user);
-                  user?.sendEmailVerification();
+                  () => user?.sendEmailVerification();
                   if (!context.mounted) {
                     log("Context Error");
                   } else {

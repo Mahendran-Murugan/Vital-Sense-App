@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:vitalsense/firebase_options.dart';
 import 'package:vitalsense/pages/chat_screen.dart';
 import 'package:vitalsense/pages/doctor_screen.dart';
-import 'package:vitalsense/pages/home_screen.dart';
 import 'package:vitalsense/pages/login_screen.dart';
 import 'package:vitalsense/pages/patient_screen.dart';
 import 'package:vitalsense/pages/register_screen.dart';
@@ -32,7 +31,7 @@ class MyApp extends StatelessWidget {
       ),
       initialRoute: homeRoute,
       routes: {
-        homeRoute: (context) => const HomeScreen(),
+        homeRoute: (context) => const LoginScreen(),
         loginRoute: (context) => const LoginScreen(),
         chatRoute: (context) => const ChatScreen(),
         verifyEmailRoute: (context) => const VerifyEmailScreen(),
