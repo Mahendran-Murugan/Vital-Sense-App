@@ -1,11 +1,9 @@
 import 'dart:developer';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:vitalsense/routes/constants.dart';
 import 'package:vitalsense/utils/show_error_dialog.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 const List<String> list = <String>['Patient', 'Doctor'];
 
@@ -20,29 +18,7 @@ class _LoginScreenState extends State<LoginScreen> {
   late final TextEditingController _email;
   late final TextEditingController _password;
 
-  final FirebaseAuth _auth = FirebaseAuth.instance;
-
-  String s = "";
-
   String dropDownValue = list.first;
-
-  final DatabaseReference _dbRef =
-      FirebaseDatabase.instance.ref().child("users");
-
-  void selectiveRendering(User? user) async {
-    if (user == null) return;
-    final ref = await _dbRef.child(user.uid).child("status").get();
-    final pre = await SharedPreferences.getInstance();
-    if (ref.exists) {
-      await pre.setString("status", ref.value as String);
-    }
-  }
-
-  readPref() async {
-    final pre = await SharedPreferences.getInstance();
-    s = pre.getString("status") ?? " ";
-    print(s);
-  }
 
   @override
   void initState() {
@@ -138,23 +114,14 @@ class _LoginScreenState extends State<LoginScreen> {
                     log("Context Error");
                   } else {
                     final user = FirebaseAuth.instance.currentUser;
-                    selectiveRendering(user);
-                    await readPref();
                     if (user?.emailVerified ?? false) {
                       if (dropDownValue == "Patient") {
-                        Navigator.of(context).pushNamedAndRemoveUntil(
+                        Navigator.of(context).pushNamed(
                           patientRoute,
-                          (route) => false,
                         );
                       } else if (dropDownValue == "Doctor") {
-                        Navigator.of(context).pushNamedAndRemoveUntil(
+                        Navigator.of(context).pushNamed(
                           doctorRoute,
-                          (route) => false,
-                        );
-                      } else {
-                        Navigator.of(context).pushNamedAndRemoveUntil(
-                          chatRoute,
-                          (route) => false,
                         );
                       }
                     } else {

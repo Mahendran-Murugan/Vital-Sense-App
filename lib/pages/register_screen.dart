@@ -19,6 +19,7 @@ class RegisterScreen extends StatefulWidget {
 class _RegisterScreenState extends State<RegisterScreen> {
   late final TextEditingController _email;
   late final TextEditingController _password;
+  late final TextEditingController _name;
 
   String s = "";
 
@@ -31,23 +32,34 @@ class _RegisterScreenState extends State<RegisterScreen> {
     s = pre.getString("status") ?? " ";
   }
 
-  final DatabaseReference _dbRef =
-      FirebaseDatabase.instance.ref().child('users');
+  final DatabaseReference _dbRef = FirebaseDatabase.instance.ref();
 
-  void setData(String email, String status, User? user) async {
+  void setData(String name, String email, String status, User? user) async {
     if (user == null) return;
-    DatabaseReference curr = _dbRef.child(user.uid);
+    DatabaseReference curr = _dbRef.child('users').child(user.uid);
     curr.set({
+      "name": name,
       "id": user.uid,
       "email": email,
       "status": status,
     });
+    if (status == "Patient") {
+      DatabaseReference curr2 = _dbRef.child('patients').child(user.uid);
+      curr2.set({
+        "name": name,
+        "id": user.uid,
+        "email": email,
+        "status": status,
+        "prescription": "No Presciption",
+      });
+    }
   }
 
   @override
   void initState() {
     _email = TextEditingController();
     _password = TextEditingController();
+    _name = TextEditingController();
     super.initState();
   }
 
@@ -108,6 +120,15 @@ class _RegisterScreenState extends State<RegisterScreen> {
               ],
             ),
             TextField(
+              controller: _name,
+              enableSuggestions: false,
+              keyboardType: TextInputType.text,
+              autocorrect: false,
+              decoration: const InputDecoration(
+                hintText: 'Enter your name',
+              ),
+            ),
+            TextField(
               controller: _email,
               enableSuggestions: false,
               keyboardType: TextInputType.emailAddress,
@@ -127,6 +148,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
             ),
             TextButton(
               onPressed: () async {
+                final name = _name.text;
                 final email = _email.text;
                 final pass = _password.text;
                 try {
@@ -135,7 +157,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     password: pass,
                   );
                   final user = _auth.currentUser;
-                  setData(email, dropDownValue, user);
+                  setData(name, email, dropDownValue, user);
                   () => user?.sendEmailVerification();
                   if (!context.mounted) {
                     log("Context Error");
