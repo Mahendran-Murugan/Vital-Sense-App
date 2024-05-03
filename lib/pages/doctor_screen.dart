@@ -2,6 +2,7 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_database/ui/firebase_animated_list.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:vitalsense/pages/vital_screen.dart';
 import 'package:vitalsense/routes/constants.dart';
 
 class DoctorScreen extends StatefulWidget {
@@ -39,7 +40,10 @@ class _DoctorScreenState extends State<DoctorScreen> {
                       color: Colors.red.shade50,
                       child: GestureDetector(
                         onTap: () => {
-                          Navigator.of(context).pushNamed(vitalRoute),
+                          Navigator.of(context).push(MaterialPageRoute(
+                              builder: (context) => VitalScreen(
+                                    uid: snapshot.key!,
+                                  ))),
                         },
                         child: Padding(
                           padding: const EdgeInsets.all(10),

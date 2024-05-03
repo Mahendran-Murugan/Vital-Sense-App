@@ -1,15 +1,12 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:vitalsense/firebase_options.dart';
-import 'package:vitalsense/pages/chat_screen.dart';
 import 'package:vitalsense/pages/doctor_screen.dart';
 import 'package:vitalsense/pages/login_screen.dart';
 import 'package:vitalsense/pages/patient_screen.dart';
-import 'package:vitalsense/pages/prescription_screen.dart';
 import 'package:vitalsense/pages/register_screen.dart';
 import 'package:vitalsense/pages/url_screen.dart';
 import 'package:vitalsense/pages/verify_email_screen.dart';
-import 'package:vitalsense/pages/vital_screen.dart';
 import 'package:vitalsense/routes/constants.dart';
 
 void main() async {
@@ -35,13 +32,10 @@ class MyApp extends StatelessWidget {
       initialRoute: loginRoute,
       routes: {
         loginRoute: (context) => const LoginScreen(),
-        chatRoute: (context) => const ChatScreen(),
         verifyEmailRoute: (context) => const VerifyEmailScreen(),
         registerRoute: (context) => const RegisterScreen(),
         doctorRoute: (context) => const DoctorScreen(),
         patientRoute: (context) => const PatientScreen(),
-        vitalRoute: (context) => const VitalScreen(),
-        prescriptionRoute: (context) => const PrescriptionScreen(),
         urlRoute: (context) => const UrlScreen(),
       },
     );

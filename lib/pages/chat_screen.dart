@@ -9,7 +9,9 @@ import 'package:vitalsense/model/chat_response.dart';
 const List<String> list = <String>['Prescription', 'ChatBot'];
 
 class ChatScreen extends StatefulWidget {
-  const ChatScreen({super.key});
+  final String serverUrl;
+
+  const ChatScreen({super.key, required this.serverUrl});
 
   @override
   State<ChatScreen> createState() => _ChatScreenState();
@@ -23,7 +25,6 @@ class _ChatScreenState extends State<ChatScreen> {
   final List<ChatUser> _typingUser = [];
 
   String dropDownValue = list.first;
-  String url = "";
 
   @override
   Widget build(BuildContext context) {
@@ -98,9 +99,9 @@ class _ChatScreenState extends State<ChatScreen> {
   Future<Chat> post(ChatMessage m) async {
     final Uri uri;
     if (dropDownValue == "ChatBot") {
-      uri = Uri.parse("$url/api/post/medicine");
+      uri = Uri.parse("$widget.serverUrl/api/post/medicine");
     } else {
-      uri = Uri.parse("$url/api/post/chatbot");
+      uri = Uri.parse("$widget.serverUrl/api/post/chatbot");
     }
     Map<String, dynamic> request = {
       'message': m.text.trimRight(),

@@ -39,7 +39,7 @@ class _LoginScreenState extends State<LoginScreen> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.red[400],
-        title: Text('Login',
+        title: Text('L O G I N',
             style: GoogleFonts.amaranth(
               color: Colors.white,
               fontSize: 22,

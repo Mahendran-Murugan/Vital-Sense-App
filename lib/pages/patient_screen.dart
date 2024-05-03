@@ -30,7 +30,11 @@ class _PatientScreenState extends State<PatientScreen> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             ElevatedButton(
-              onPressed: () => {},
+              onPressed: () => {
+                Navigator.of(context).pushNamed(
+                  prescriptionRoute,
+                ),
+              },
               child: const Text(
                 'Prescription',
               ),
@@ -40,7 +44,7 @@ class _PatientScreenState extends State<PatientScreen> {
             ),
             ElevatedButton(
               onPressed: () => {
-                Navigator.of(context).pushNamed(chatRoute),
+                Navigator.of(context).pushNamed(urlRoute),
               },
               child: const Text(
                 'ChatBot',
