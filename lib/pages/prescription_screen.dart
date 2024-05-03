@@ -1,6 +1,7 @@
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:vitalsense/pages/vital_screen.dart';
 
 class PrescriptionScreen extends StatefulWidget {
   final String uid;
@@ -16,7 +17,7 @@ class _PrescriptionScreenState extends State<PrescriptionScreen> {
   final DatabaseReference _dbRef = FirebaseDatabase.instance.ref();
 
   void setData(String uid) async {
-    DatabaseReference curr = _dbRef.child('patient').child(uid);
+    DatabaseReference curr = _dbRef.child('patients').child(uid);
     curr.update({
       "prescription": _prescription.text,
     });
@@ -62,7 +63,16 @@ class _PrescriptionScreenState extends State<PrescriptionScreen> {
               height: 50,
             ),
             ElevatedButton(
-              onPressed: () => setData(widget.uid),
+              onPressed: () => {
+                setData(widget.uid),
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => VitalScreen(
+                      uid: widget.uid,
+                    ),
+                  ),
+                )
+              },
               child: const Text(
                 "Submit",
               ),
